@@ -12,12 +12,12 @@ class Totalizer
 
   def special_total_of_item(sale_unit_quantity, sale_unit_price, quantity, item)
     units_on_offer = quantity / sale_unit_quantity
-    price_of_units_on_offer = units_on_offer * sale_unit_price
+    special_total_on_item = units_on_offer * sale_unit_price
 
     units_on_regular_price = quantity - (units_on_offer * sale_unit_quantity)
     regular_total_on_item = regular_total_of_item(units_on_regular_price, item.price)
 
-    price_of_units_on_offer + regular_total_on_item
+    special_total_on_item + regular_total_on_item
   end
 
   def total(cart)
