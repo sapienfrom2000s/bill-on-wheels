@@ -3,14 +3,14 @@
   on_sale: true
   sale:
     price: 5
-    quanity: 2
+    quantity: 2
 
 - name: 'Bread'
-  price: 3.97
+  price: 2.17
   on_sale: true
   sale:
     price: 6
-    quanity: 3
+    quantity: 3
 
 - name: 'Banana'
   price: 0.99
