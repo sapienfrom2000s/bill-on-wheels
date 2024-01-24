@@ -7,15 +7,15 @@ def items
   banana = Item.new(:Banana, 0.99)
   apple = Item.new(:Apple, 0.89)
 
-  inventory = [milk, bread, banana, apple]
+  [milk, bread, banana, apple]
 end
 
 def input_products
   puts 'Enter the products seperated by space'
   products = gets.chomp.split(' ')
   products.map!(&:capitalize).map!(&:to_sym)
-  products.group_by{|item| item}
-    .transform_values!{|item| item.count}
+  products.group_by { |item| item }.
+    transform_values! { |item| item.count }
 end
 
 def total(products)
@@ -25,7 +25,7 @@ def total(products)
     begin
       quantity = products.fetch(item.name)
       unit_price = item.price
-    rescue 
+    rescue
       next
     end
 
@@ -38,13 +38,17 @@ def total(products)
     end
 
     bill_without_discount += quantity * unit_price
-    unless sale_unit_quantity.nil?
-      bill_with_discount += (sale_unit_price * (quantity/sale_unit_quantity)) + ((quantity%sale_unit_quantity) * unit_price)
-    else
+    if sale_unit_quantity.nil?
       bill_with_discount += quantity * unit_price
+    else
+      bill_with_discount += (sale_unit_price * (quantity / sale_unit_quantity))
+      + ((quantity % sale_unit_quantity) * unit_price)
     end
   end
-  {total: bill_with_discount.round(2), savings: (bill_without_discount - bill_with_discount).round(2)}
+  {
+    total: bill_with_discount.round(2),
+    savings: (bill_without_discount - bill_with_discount).round(2),
+  }
 end
 
 if __FILE__ == $PROGRAM_NAME

@@ -1,5 +1,4 @@
 class Item
-
   attr_reader :name, :price
 
   def initialize(name, price)
@@ -8,6 +7,6 @@ class Item
   end
 
   def info
-    {name: @name, price: @price}
+    { name: @name, price: @price }
   end
 end
