@@ -16,12 +16,13 @@ class Billing
       rescue
         next
       end
-      
+
       regular_total_on_item = regular_total(quantity, unit_price)
       regular_bill += regular_total_on_item
 
       if item['on_sale']
-        final_bill += special_total(item['sale']['quantity'], item['sale']['price'], quantity, unit_price)
+        final_bill += special_total(item['sale']['quantity'], item['sale']['price'], quantity,
+                      unit_price)
       else
         final_bill += regular_total_on_item
       end
