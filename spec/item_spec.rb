@@ -7,6 +7,7 @@ RSpec.describe Item do
     expect(item.info).to include(
       :name => 'Test Item',
       :price => 4.32,
+      :on_sale => false
     )
   end
 end
