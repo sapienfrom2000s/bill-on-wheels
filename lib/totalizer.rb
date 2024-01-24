@@ -10,12 +10,12 @@ class Totalizer
     quantity * unit_price
   end
 
-  def special_total(**args)
-    units_on_offer = args[:quantity] / args[:sale_unit_quantity]
-    special_total_on_item = units_on_offer * args[:sale_unit_price]
+  def special_total(sale_unit_quantity, sale_unit_price, quantity, regular_price)
+    units_on_offer = quantity / sale_unit_quantity
+    special_total_on_item = units_on_offer * sale_unit_price
 
-    units_on_regular_price = args[:quantity] - (units_on_offer * args[:sale_unit_quantity])
-    regular_total_on_item = regular_total(units_on_regular_price, args[:regular_price])
+    units_on_regular_price = quantity - (units_on_offer * sale_unit_quantity)
+    regular_total_on_item = regular_total(units_on_regular_price, regular_price)
 
     special_total_on_item + regular_total_on_item
   end
@@ -38,8 +38,7 @@ class Totalizer
 
       if item.on_sale
         sale = Sale.const_get(name.upcase)
-        final_bill += special_total(sale_unit_quantity: sale[:quantity],
-                       sale_unit_price: sale[:price], quantity: , regular_price: unit_price)
+        final_bill += special_total(sale[:quantity], sale[:price], quantity, unit_price)
       else
         final_bill += regular_total_on_item
       end
