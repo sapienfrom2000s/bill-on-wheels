@@ -10,12 +10,12 @@ class Totalizer
     quantity * unit_price
   end
 
-  def special_total(sale_unit_quantity, sale_unit_price, quantity, regular_price)
+  def special_total(sale_unit_quantity, sale_unit_price, quantity, unit_price)
     units_on_offer = quantity / sale_unit_quantity
     special_total_on_item = units_on_offer * sale_unit_price
 
     units_on_regular_price = quantity - (units_on_offer * sale_unit_quantity)
-    regular_total_on_item = regular_total(units_on_regular_price, regular_price)
+    regular_total_on_item = regular_total(units_on_regular_price, unit_price)
 
     special_total_on_item + regular_total_on_item
   end
