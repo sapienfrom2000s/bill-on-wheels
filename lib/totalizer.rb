@@ -33,14 +33,15 @@ class Totalizer
         next
       end
 
-      regular_bill += regular_total(quantity, unit_price)
+      regular_total_on_item = regular_total(quantity, unit_price)
+      regular_bill += regular_total_on_item
 
       if item.on_sale
         sale = Sale.const_get(name.upcase)
         final_bill += special_total(sale_unit_quantity: sale[:quantity],
                        sale_unit_price: sale[:price], quantity: , regular_price: unit_price)
       else
-        final_bill += regular_total(quantity, unit_price)
+        final_bill += regular_total_on_item
       end
     end
     {
