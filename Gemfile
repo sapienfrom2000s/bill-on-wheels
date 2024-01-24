@@ -7,3 +7,5 @@ group :development, :test do
   gem 'rubocop-rspec'
   gem 'rspec'
 end
+
+gem 'yaml'
