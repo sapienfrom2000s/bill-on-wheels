@@ -1,22 +1,21 @@
-name: 'Milk'
-price: 3.97
-on_sale: true
-sale:
-  price: 5
-  quanity: 2
+- name: 'Milk'
+  price: 3.97
+  on_sale: true
+  sale:
+    price: 5
+    quanity: 2
 
-name: 'Bread'
-price: 3.97
-on_sale: true
-sale:
-  price: 6
-  quanity: 3
+- name: 'Bread'
+  price: 3.97
+  on_sale: true
+  sale:
+    price: 6
+    quanity: 3
 
-name: 'Banana'
-price: 0.99
-on_sale: false
+- name: 'Banana'
+  price: 0.99
+  on_sale: false
 
-
-name: 'Apple'
-price: 0.89
-on_sale: false
+- name: 'Apple'
+  price: 0.89
+  on_sale: false
