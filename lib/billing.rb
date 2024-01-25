@@ -1,7 +1,7 @@
 require_relative 'item'
 require_relative 'sale'
 
-class Totalizer
+class Billing
   def initialize(inventory)
     @inventory = inventory
   end
@@ -58,7 +58,7 @@ banana = Item.new(:Banana, 0.99)
 apple = Item.new(:Apple, 0.89)
 
 inventory = [milk, bread, banana, apple]
-totalizer = Totalizer.new(inventory)
+billing = Billing.new(inventory)
 
 if __FILE__ == $PROGRAM_NAME
   puts 'Enter the products seperated by space'
@@ -68,7 +68,7 @@ if __FILE__ == $PROGRAM_NAME
     transform_values! { |item| item.count }
   cart = input_products
 
-  bill = totalizer.total(cart)
+  bill = billing.total(cart)
 
   puts "Your total bill is #{bill[:final]}"
   puts "You saved #{bill[:savings]} today!"

@@ -1,7 +1,7 @@
-require_relative '../lib/totalizer'
+require_relative '../lib/billing'
 require 'spec_helper'
 
-RSpec.describe Totalizer do
+RSpec.describe Billing do
   before(:all) do
     milk = Item.new(:Milk, 3.97, true)
     bread = Item.new(:Bread, 2.17, true)
@@ -9,11 +9,11 @@ RSpec.describe Totalizer do
     apple = Item.new(:Apple, 0.89)
 
     inventory = [milk, bread, banana, apple]
-    @totalizer = described_class.new(inventory)
+    @billing = described_class.new(inventory)
   end
 
   it 'gives the total bill' do
-    expect(@totalizer.total({
+    expect(@billing.total({
       :Milk => 3,
       :Bread => 4,
       :Apple => 1,
