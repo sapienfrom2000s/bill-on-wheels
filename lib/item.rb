@@ -1,13 +1,15 @@
-class Item
-  attr_reader :name, :price, :on_sale
+require_relative 'sale'
 
-  def initialize(name, price, on_sale = false)
+class Item
+  attr_reader :name, :price, :sale
+
+  def initialize(name, price)
     @name = name
     @price = price
-    @on_sale = on_sale
+    @sale = Sale.new
   end
 
   def info
-    { name: , price: , on_sale: }
+    { name: , price: }
   end
 end

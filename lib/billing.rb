@@ -20,9 +20,9 @@ class Billing
       regular_total_on_item = regular_total(quantity, unit_price)
       regular_bill += regular_total_on_item
 
-      if item.on_sale
-        sale = Sale.const_get(name.upcase)
-        final_bill += special_total(sale[:quantity], sale[:price], quantity, unit_price)
+      if item.sale.available
+        # sale = Sale.const_get(name.upcase)
+        final_bill += special_total(item.sale.quantity, item.sale.price, quantity, unit_price)
       else
         final_bill += regular_total_on_item
       end
