@@ -10,12 +10,15 @@ class Billing
     final_bill = 0
 
     @inventory.each do |item|
-      next unless cart.key?(item.name)
+      name = item.name
+      next unless cart.key?(name)
 
-      item_total = item_total(item, cart[item.name])
+      set_variables_for_item_invoice(item, cart[name])
 
-      final_bill += (item_total[:special] || item_total[:regular])
-      regular_bill += item_total[:regular]
+      bill = invoice_per_item
+
+      final_bill += (bill[:special] || bill[:regular])
+      regular_bill += bill[:regular]
     end
     {
       final: final_bill.round(2),
@@ -25,28 +28,36 @@ class Billing
 
   private
 
-  def item_total(item, quantity)
+  attr_reader :item, :quantity_ordered
+
+  def set_variables_for_item_invoice(item, quantity)
+    @item = item
+    @quantity_ordered = quantity
+  end
+
+  def units_eligible_for_offer
+    0 unless item.sale.available
+    quantity_ordered / item.sale.quantity
+  end
+
+  def units_on_regular_price
+    quantity_ordered - (units_eligible_for_offer * item.sale.quantity)
+  end
+
+  def invoice_per_item
     bill = { regular: nil, special: nil }
 
-    if item.sale.available
-      bill[:special] =
-        special_item_total(item.sale.quantity, item.sale.price, quantity, item.price)
-    end
-    bill[:regular] = regular_item_total(quantity, item.price)
+    bill[:regular] = cost_per_item(quantity_ordered, item.price)
+
+    return bill unless item.sale.available
+
+    bill[:special] = (cost_per_item(units_eligible_for_offer,
+item.sale.price) + cost_per_item(units_on_regular_price, item.price))
 
     bill
   end
 
-  def regular_item_total(quantity, unit_price)
+  def cost_per_item(quantity, unit_price)
     quantity * unit_price
-  end
-
-  def special_item_total(sale_unit_quantity, sale_unit_price, quantity, unit_price)
-    units_on_offer = quantity / sale_unit_quantity
-    special_item_total = units_on_offer * sale_unit_price
-
-    units_on_regular_price = quantity - (units_on_offer * sale_unit_quantity)
-
-    special_item_total + regular_item_total(units_on_regular_price, unit_price)
   end
 end
