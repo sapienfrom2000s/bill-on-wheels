@@ -10,15 +10,9 @@ class Billing
     final_bill = 0
 
     @inventory.each do |item|
-      begin
-        name = item.name
-        quantity = cart.fetch(name)
-        unit_price = item.price
-      rescue
-        next
-      end
+      next unless cart.key?(item.name)
 
-      total = item_total(item, quantity)
+      total = item_total(item, cart[item.name])
 
       final_bill += (total[:special] || total[:regular])
       regular_bill += total[:regular]
@@ -32,9 +26,13 @@ class Billing
   private
 
   def item_total(item, quantity)
-    bill = {regular: nil, special: nil}
+    bill = { regular: nil, special: nil }
 
-    bill[:special] = special_total_on_item(item.sale.quantity, item.sale.price, quantity, item.price) if item.sale.available
+    if item.sale.available
+      bill[:special] =
+        special_total_on_item(item.sale.quantity, item.sale.price, quantity,
+item.price)
+    end
     bill[:regular] = regular_total_on_item(quantity, item.price)
 
     bill
