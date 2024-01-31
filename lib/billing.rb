@@ -15,7 +15,7 @@ class Billing
 
       set_variables_for_item_invoice(item, quantity)
 
-      bill = invoice_per_item
+      bill = invoice_on_item
 
       final_bill += (bill[:special] || bill[:regular])
       regular_bill += bill[:regular]
@@ -50,20 +50,20 @@ class Billing
     quantity_ordered - (units_eligible_for_offer * item.sale.quantity)
   end
 
-  def invoice_per_item
+  def invoice_on_item
     bill = { regular: nil, special: nil }
 
-    bill[:regular] = cost_per_item(quantity_ordered, item.price)
+    bill[:regular] = item_total(quantity_ordered, item.price)
 
     return bill unless item.sale.available
 
-    bill[:special] = (cost_per_item(units_eligible_for_offer,
-item.sale.price) + cost_per_item(units_on_regular_price, item.price))
+    bill[:special] = (item_total(units_eligible_for_offer,
+item.sale.price) + item_total(units_on_regular_price, item.price))
 
     bill
   end
 
-  def cost_per_item(quantity, unit_price)
+  def item_total(quantity, unit_price)
     quantity * unit_price
   end
 end
