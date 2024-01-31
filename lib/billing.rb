@@ -1,4 +1,5 @@
 require 'tty-table'
+require 'colorize'
 
 class Billing
   attr_reader :invoice
@@ -37,7 +38,7 @@ class Billing
     end
     puts table.render(:unicode, alignments: [:left, :center, :center, :center, :center])
     puts "Your total bill is $#{final_bill.round(2)}"
-    puts "You saved $#{(regular_bill - final_bill).round(2)} today!"
+    puts "You saved $#{(regular_bill - final_bill).round(2)} today!".colorize(:green)
   end
 
   private
@@ -46,7 +47,7 @@ class Billing
 
   def find_item_in_inventory(name)
     item = @inventory.find { |product| product.name == name }
-    puts "#{name} not found in inventory" unless item
+    puts "#{name} not found in inventory".colorize(:red) unless item
     item
   end
 
