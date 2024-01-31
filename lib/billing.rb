@@ -1,6 +1,8 @@
 require_relative 'sale'
 
 class Billing
+  attr_reader :invoice
+
   def initialize(inventory)
     @inventory = inventory
   end
@@ -8,7 +10,6 @@ class Billing
   def total(cart)
     regular_bill = 0
     final_bill = 0
-
     cart.each do |name, quantity|
       item = find_item_in_inventory(name)
       next unless item
@@ -17,13 +18,26 @@ class Billing
 
       bill = invoice_on_item
 
+      yield(bill, name, quantity) if block_given?
+
       final_bill += (bill[:special] || bill[:regular])
       regular_bill += bill[:regular]
     end
-    {
-      final: final_bill.round(2),
-      savings: (regular_bill - final_bill).round(2),
-    }
+    { regular: regular_bill, final: final_bill }
+  end
+
+  def invoice_pretty_print(cart)
+    regular_bill = 0
+    final_bill = 0
+    puts 'Name    Quantity    Regular Price    Final Price'
+    puts '----    --------    -------------    -----------'
+    total(cart) do |item_bill, name, quantity|
+      regular_bill += item_bill[:regular]
+      final_bill += item_bill[:special]
+      puts "#{name}    #{quantity}    $#{item_bill[:regular].round(2)}    $#{item_bill[:special].round(2)}"
+    end
+    puts "Your total bill is #{final_bill.round(2)}"
+    puts "You saved #{(regular_bill - final_bill).round(2)} today!"
   end
 
   private

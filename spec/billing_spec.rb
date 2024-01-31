@@ -25,7 +25,7 @@ RSpec.describe Billing do
         :Banana => 1,
       })).to include(
         :final => 19.02,
-        :savings => 3.45
+        :regular => 22.47,
       )
     end
   end

@@ -19,7 +19,4 @@ products.map!(&:capitalize).map!(&:to_sym)
 cart = products.group_by { |item| item }.
   transform_values! { |item| item.count }
 
-bill = billing.total(cart)
-
-puts "Your total bill is #{bill[:final]}"
-puts "You saved #{bill[:savings]} today!"
+billing.invoice_pretty_print(cart)
