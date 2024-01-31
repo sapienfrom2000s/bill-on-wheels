@@ -1,4 +1,4 @@
-require_relative 'sale'
+require 'tty-table'
 
 class Billing
   attr_reader :invoice
@@ -29,15 +29,15 @@ class Billing
   def invoice_pretty_print(cart)
     regular_bill = 0
     final_bill = 0
-    puts 'Name    Quantity    Regular Price    Final Price'
-    puts '----    --------    -------------    -----------'
+    table = TTY::Table.new(header: ['Name', 'Quantity', 'Regular Price', 'Final Price'])
     total(cart) do |item_bill, name, quantity|
       regular_bill += item_bill[:regular]
-      final_bill += item_bill[:special]
-      puts "#{name}    #{quantity}    $#{item_bill[:regular].round(2)}    $#{item_bill[:special].round(2)}"
+      final_bill += (item_bill[:special] || item_bill[:regular])
+      table << [name, quantity, item_bill[:regular], item_bill[:special] || item_bill[:regular]]
     end
-    puts "Your total bill is #{final_bill.round(2)}"
-    puts "You saved #{(regular_bill - final_bill).round(2)} today!"
+    puts table.render(:unicode, alignments: [:left, :center, :center, :center, :center])
+    puts "Your total bill is $#{final_bill.round(2)}"
+    puts "You saved $#{(regular_bill - final_bill).round(2)} today!"
   end
 
   private
