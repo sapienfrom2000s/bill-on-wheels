@@ -2,14 +2,10 @@ require_relative 'item'
 require_relative 'billing'
 
 milk = Item.new(:Milk, 3.97)
-milk.sale.available = true
-milk.sale.price = 5
-milk.sale.quantity = 2
+milk.sale.set_offer(price: 5, quantity: 2)
 
 bread = Item.new(:Bread, 2.17)
-bread.sale.available = true
-bread.sale.price = 6
-bread.sale.quantity = 3
+bread.sale.set_offer(price: 6, quantity: 3)
 
 banana = Item.new(:Banana, 0.99)
 apple = Item.new(:Apple, 0.89)
