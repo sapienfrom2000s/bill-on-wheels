@@ -28,17 +28,13 @@ class Billing
   end
 
   def invoice_pretty_print(cart)
-    regular_bill = 0
-    final_bill = 0
     table = TTY::Table.new(header: ['Name', 'Quantity', 'Regular Price', 'Final Price'])
-    total(cart) do |item_bill, name, quantity|
-      regular_bill += item_bill[:regular]
-      final_bill += (item_bill[:special] || item_bill[:regular])
+    bill = total(cart) do |item_bill, name, quantity|
       table << [name, quantity, item_bill[:regular], item_bill[:special] || item_bill[:regular]]
     end
     puts table.render(:unicode, alignments: [:left, :center, :center, :center, :center])
-    puts "Your total bill is $#{final_bill.round(2)}"
-    puts "You saved $#{(regular_bill - final_bill).round(2)} today!".colorize(:green)
+    puts "Your total bill is $#{bill[:final].round(2)}"
+    puts "You saved $#{(bill[:regular] - bill[:final]).round(2)} today!".colorize(:green)
   end
 
   private
