@@ -9,11 +9,11 @@ class Billing
     regular_bill = 0
     final_bill = 0
 
-    @inventory.each do |item|
-      name = item.name
-      next unless cart.key?(name)
+    cart.each do |name, quantity|
+      item = find_item_in_inventory(name)
+      next unless item
 
-      set_variables_for_item_invoice(item, cart[name])
+      set_variables_for_item_invoice(item, quantity)
 
       bill = invoice_per_item
 
@@ -29,6 +29,12 @@ class Billing
   private
 
   attr_reader :item, :quantity_ordered
+
+  def find_item_in_inventory(name)
+    item = @inventory.find { |product| product.name == name }
+    puts "#{name} not found in inventory" unless item
+    item
+  end
 
   def set_variables_for_item_invoice(item, quantity)
     @item = item
