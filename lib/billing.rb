@@ -52,26 +52,36 @@ class Billing
     @quantity_ordered = quantity
   end
 
-  def units_eligible_for_offer
+  def calculate_units_eligible_for_offer
     0 unless item.sale.available
     quantity_ordered / item.sale.quantity
   end
 
-  def units_on_regular_price
-    quantity_ordered - (units_eligible_for_offer * item.sale.quantity)
+  def quantity_on_regular_price(units_on_offer)
+    quantity_ordered - (units_on_offer * item.sale.quantity)
   end
 
   def invoice_on_item
     bill = { regular: nil, special: nil }
 
-    bill[:regular] = item_total(quantity_ordered, item.price)
+    bill[:regular] = regular_invoice_on_item
 
     return bill unless item.sale.available
 
-    bill[:special] = (item_total(units_eligible_for_offer,
-item.sale.price) + item_total(units_on_regular_price, item.price))
+    bill[:special] = special_invoice_on_item
 
     bill
+  end
+
+  def regular_invoice_on_item
+    item_total(quantity_ordered, item.price)
+  end
+
+  def special_invoice_on_item
+    units_on_offer = calculate_units_eligible_for_offer
+    quantity_ineligible_for_offer = quantity_on_regular_price(units_on_offer)
+
+    item_total(units_on_offer, item.sale.price) + item_total(quantity_ineligible_for_offer, item.price)
   end
 
   def item_total(quantity, unit_price)
