@@ -2,7 +2,6 @@ require 'tty-table'
 require 'colorize'
 
 class Billing
-  attr_reader :invoice
 
   def initialize(inventory)
     @inventory = inventory
@@ -17,12 +16,12 @@ class Billing
 
       set_variables_for_item_invoice(item, quantity)
 
-      bill = invoice_on_item
+      item_bill = calculate_invoice_on_item
 
-      yield(bill, name, quantity) if block_given?
+      yield(item_bill, name, quantity) if block_given?
 
-      final_bill += (bill[:special] || bill[:regular])
-      regular_bill += bill[:regular]
+      final_bill += (item_bill[:special] || item_bill[:regular])
+      regular_bill += item_bill[:regular]
     end
     { regular: regular_bill, final: final_bill }
   end
@@ -57,31 +56,32 @@ class Billing
     quantity_ordered / item.sale.quantity
   end
 
-  def quantity_on_regular_price(units_on_offer)
+  def calculate_quantity_ineligible_for_offer(units_on_offer)
     quantity_ordered - (units_on_offer * item.sale.quantity)
   end
 
-  def invoice_on_item
+  def calculate_invoice_on_item
     bill = { regular: nil, special: nil }
 
-    bill[:regular] = regular_invoice_on_item
+    bill[:regular] = calculate_regular_invoice_on_item
 
     return bill unless item.sale.available
 
-    bill[:special] = special_invoice_on_item
+    bill[:special] = calculate_special_invoice_on_item
 
     bill
   end
 
-  def regular_invoice_on_item
+  def calculate_regular_invoice_on_item
     item_total(quantity_ordered, item.price)
   end
 
-  def special_invoice_on_item
+  def calculate_special_invoice_on_item
     units_on_offer = calculate_units_eligible_for_offer
-    quantity_ineligible_for_offer = quantity_on_regular_price(units_on_offer)
+    quantity_ineligible_for_offer = calculate_quantity_ineligible_for_offer(units_on_offer)
 
-    item_total(units_on_offer, item.sale.price) + item_total(quantity_ineligible_for_offer, item.price)
+    item_total(units_on_offer,
+item.sale.price) + item_total(quantity_ineligible_for_offer, item.price)
   end
 
   def item_total(quantity, unit_price)
