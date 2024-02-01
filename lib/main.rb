@@ -1,6 +1,7 @@
 require_relative 'admin'
 require_relative 'store'
 require_relative 'billing'
+require_relative 'cashier'
 
 rama_grocery = Store.new('Rama Grocery Store')
 admin_raman = Admin.new('Raman', rama_grocery)
@@ -17,12 +18,7 @@ end
 admin_raman.set_offer(name: :Milk, price: 5, quantity: 2)
 admin_raman.set_offer(name: :Bread, price: 6, quantity: 3)
 
-cashier_joseph = Billing.new(rama_grocery.items)
+billing = Billing.new(rama_grocery.items)
+cashier_joseph = Cashier.new(billing)
 
-puts 'Enter the products seperated by space'
-products = gets.chomp.split(' ')
-products.map!(&:capitalize).map!(&:to_sym)
-cart = products.group_by { |item| item }.
-  transform_values! { |item| item.count }
-
-cashier_joseph.invoice_pretty_print(cart)
+cashier_joseph.do_billing
