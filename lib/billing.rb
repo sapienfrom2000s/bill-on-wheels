@@ -2,7 +2,6 @@ require 'tty-table'
 require 'colorize'
 
 class Billing
-
   def initialize(inventory)
     @inventory = inventory
   end

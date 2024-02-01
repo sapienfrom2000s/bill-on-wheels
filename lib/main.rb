@@ -1,17 +1,23 @@
-require_relative 'item'
+require_relative 'admin'
+require_relative 'store'
 require_relative 'billing'
 
-milk = Item.new(:Milk, 3.97)
-milk.sale.set_offer(price: 5, quantity: 2)
+rama_grocery = Store.new('Rama Grocery Store')
+admin_raman = Admin.new('Raman', rama_grocery)
 
-bread = Item.new(:Bread, 2.17)
-bread.sale.set_offer(price: 6, quantity: 3)
+items = [
+  { name: :Milk, price: 3.97 }, { name: :Bread, price: 2.17 }, { name: :Banana, price: 0.99 },
+  { name: :Apple, price: 0.89 },
+]
 
-banana = Item.new(:Banana, 0.99)
-apple = Item.new(:Apple, 0.89)
+items.each do |item|
+  admin_raman.add_item(item[:name], item[:price])
+end
 
-inventory = [milk, bread, banana, apple]
-billing = Billing.new(inventory)
+admin_raman.set_offer(name: :Milk, price: 5, quantity: 2)
+admin_raman.set_offer(name: :Bread, price: 6, quantity: 3)
+
+cashier_joseph = Billing.new(rama_grocery.items)
 
 puts 'Enter the products seperated by space'
 products = gets.chomp.split(' ')
@@ -19,4 +25,4 @@ products.map!(&:capitalize).map!(&:to_sym)
 cart = products.group_by { |item| item }.
   transform_values! { |item| item.count }
 
-billing.invoice_pretty_print(cart)
+cashier_joseph.invoice_pretty_print(cart)
