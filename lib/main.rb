@@ -2,17 +2,15 @@ require_relative 'admin'
 require_relative 'store'
 require_relative 'billing'
 require_relative 'cashier'
+require 'yaml'
 
 rama_grocery = Store.new('Rama Grocery Store')
 admin_raman = Admin.new('Raman', rama_grocery)
 
-items = [
-  { name: :Milk, price: 3.97 }, { name: :Bread, price: 2.17 }, { name: :Banana, price: 0.99 },
-  { name: :Apple, price: 0.89 },
-]
+inventory = YAML.safe_load_file(File.join(File.dirname(__FILE__), 'inventory.yml'))
 
-items.each do |item|
-  admin_raman.add_item(item[:name], item[:price])
+inventory.each do |item|
+  admin_raman.add_item(item['name'].to_sym, item['price'])
 end
 
 admin_raman.set_offer(name: :Milk, price: 5, quantity: 2)

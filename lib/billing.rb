@@ -30,7 +30,7 @@ class Billing
     bill = total(cart) do |item_bill, name, quantity|
       table << [name, quantity, item_bill[:regular], item_bill[:special] || item_bill[:regular]]
     end
-    puts table.render(:unicode, alignments: [:left, :center, :center, :center, :center])
+    puts table.render(:ascii, alignments: [:left, :center, :center, :center, :center])
     puts "Your total bill is $#{bill[:final].round(2)}"
     puts "You saved $#{(bill[:regular] - bill[:final]).round(2)} today!".colorize(:green)
   end
@@ -41,7 +41,10 @@ class Billing
 
   def find_item_in_inventory(name)
     item = @inventory.find { |product| product.name == name }
-    puts "#{name} not found in inventory".colorize(:red) unless item
+    unless item
+      puts "#{name} not found in inventory.\n" \
+      "You might have mistyped product's name".colorize(:red)
+    end
     item
   end
 
