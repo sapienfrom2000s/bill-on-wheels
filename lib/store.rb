@@ -7,6 +7,7 @@ class Store
 
   def add_item(item)
     @items << item
+    item
   end
 
   def delete_item(item)

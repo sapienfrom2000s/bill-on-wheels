@@ -21,6 +21,11 @@ class Admin
     item.sale.set_offer(price: args[:price], quantity: args[:quantity])
   end
 
+  def unset_offer(name)
+    item = find_item_in_store(name)
+    item.sale.unset_offer
+  end
+
   private
 
   def find_item_in_store(name)
