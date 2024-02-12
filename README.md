@@ -8,3 +8,8 @@
 # Screenshot
 
 ![Invoice](https://github.com/sapienfrom2000s/bill-on-wheels/blob/main/assets/invoice.jpg)
+
+# To Do
+
+Host a local server to authorize admin and cashier.
+
